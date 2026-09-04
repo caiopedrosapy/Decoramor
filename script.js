@@ -1,31 +1,123 @@
-CREATE DATABASE decoramor;
+const form = document.getElementById("formAvaliacao");
+const lista = document.getElementById("listaAvaliacoes");
 
-USE decoramor;
 
-CREATE TABLE avaliacoes (
-    id_avaliacao INT AUTO_INCREMENT PRIMARY KEY,
-    nome VARCHAR(100) NOT NULL,
-    comentario TEXT NOT NULL,
-    nota INT NOT NULL,
-    data_avaliacao DATETIME DEFAULT CURRENT_TIMESTAMP
-);
+// ==============================
+// CARREGAR AVALIAÇÕES
+// ==============================
 
-INSERT INTO avaliacoes (nome, comentario, nota)
-VALUES
-('Maria Silva', 'Adorei o atendimento e a decoração!', 5),
-('João Santos', 'Ambiente muito bonito e atendimento excelente.', 5),
-('Ana Oliveira', 'Gostei muito do resultado.', 4);
+function carregarAvaliacoes() {
 
-SELECT * FROM avaliacoes;
+    const avaliacoes =
+        JSON.parse(localStorage.getItem("avaliacoes")) || [];
 
-SELECT
-    nome,
-    comentario,
-    nota,
-    data_avaliacao
-FROM avaliacoes
-ORDER BY data_avaliacao DESC;
+    lista.innerHTML = "";
 
-SELECT
-    ROUND(AVG(nota), 1) AS media_avaliacoes
-FROM avaliacoes;
+    avaliacoes.forEach(avaliacao => {
+
+        mostrarAvaliacao(avaliacao);
+
+    });
+}
+
+
+// ==============================
+// MOSTRAR AVALIAÇÃO
+// ==============================
+
+function mostrarAvaliacao(avaliacao) {
+
+    const nova = document.createElement("div");
+
+    nova.className = "avaliacao";
+
+    nova.innerHTML = `
+        <h4>${avaliacao.nome}</h4>
+
+        <p>
+            ${"⭐".repeat(avaliacao.nota)}
+        </p>
+
+        <p>
+            ${avaliacao.comentario}
+        </p>
+
+        <small>
+            ${avaliacao.data}
+        </small>
+    `;
+
+    lista.appendChild(nova);
+}
+
+
+// ==============================
+// ENVIAR AVALIAÇÃO
+// ==============================
+
+form.addEventListener("submit", function(e) {
+
+    e.preventDefault();
+
+    const nome =
+        document.getElementById("nome").value;
+
+    const comentario =
+        document.getElementById("comentario").value;
+
+    const nota =
+        Number(document.getElementById("nota").value);
+
+
+    const novaAvaliacao = {
+
+        nome: nome,
+
+        comentario: comentario,
+
+        nota: nota,
+
+        data: new Date().toLocaleDateString("pt-BR")
+
+    };
+
+
+    // Buscar avaliações existentes
+
+    const avaliacoes =
+        JSON.parse(localStorage.getItem("avaliacoes")) || [];
+
+
+    // Adicionar nova avaliação
+
+    avaliacoes.unshift(novaAvaliacao);
+
+
+    // Salvar no navegador
+
+    localStorage.setItem(
+        "avaliacoes",
+        JSON.stringify(avaliacoes)
+    );
+
+
+    // Atualizar tela
+
+    carregarAvaliacoes();
+
+
+    // Limpar formulário
+
+    form.reset();
+
+
+    alert("Avaliação enviada com sucesso!");
+
+});
+
+
+// ==============================
+// INICIAR
+// ==============================
+
+carregarAvaliacoes();
