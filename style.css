@@ -89,10 +89,9 @@ nav a:hover::after{
 =========================== */
 
 .hero{
-
     height:100vh;
 
-    background:url("https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?w=1600")
+    background:url("https://i.imgur.com/roiXOrn.jpeg")
     center center/cover no-repeat;
 
     display:flex;
@@ -346,8 +345,8 @@ section h2{
 }
 
 .servicos i{
+    display:block;
     font-size:42px;
-    color:#8e0422;
     margin-bottom:20px;
     transition:.3s;
 }
